@@ -29,9 +29,9 @@ export default function Footer(props) {
   return (
     <footer className={classes.footer}>
       <img
-        alt='instagram logo'
-        src='/assets/instagram.svg'
-        className={classes.icon}
+        alt='logo'
+        src='/assets/footerAdornment.svg'
+        className={classes.adornment}
       />
     </footer>
   );

@@ -1,8 +1,7 @@
 import React from 'react';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
-import { makeStyles } from '@material-ui/styles';
-import { useTheme } from '@material-ui/core/styles';
+import { makeStyles, useTheme } from '@material-ui/core/styles';
 
 const useStyles = makeStyles(theme => ({
   toolbarMargin: {
@@ -36,7 +35,6 @@ export default function Header(props) {
 
   return (
     <React.Fragment>
-      <ElevationScroll>
         <AppBar position='fixed' className={classes.appbar}>
           <Toolbar disableGutters>
             <svg
@@ -86,7 +84,6 @@ export default function Header(props) {
             </svg>
           </Toolbar>
         </AppBar>
-      </ElevationScroll>
       <div className={classes.toolbarMargin} />
     </React.Fragment>
   );
