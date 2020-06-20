@@ -115,7 +115,7 @@ export default function ProjectManager() {
   ]);
 
   const platformOptions = ['Web', 'iOS', 'Android'];
-  const featureOptions = [
+  var featureOptions = [
     'Photo/Video',
     'GPS',
     'File Transfer',
@@ -123,6 +123,7 @@ export default function ProjectManager() {
     'Biometrics',
     'Push Notifications'
   ];
+  var websiteOptions = ['Basic', 'Interactive', 'E-Commerce'];
 
   const [dialogOpen, setDialogOpen] = useState(false);
   const [name, setName] = useState('');
@@ -139,13 +140,13 @@ export default function ProjectManager() {
       ...rows,
       createData(
         name,
-        format(date, 'MM/dd/yy'),
+        format(date, 'MM/dd/yyyy'),
         service,
         features.join(', '),
-        complexity,
-        platforms.join(', '),
-        users,
-        total
+        service === 'Website' ? 'N/A' : complexity,
+        service === 'Website' ? 'N/A' : platforms.join(', '),
+        service === 'Website' ? 'N/A' : users,
+        `$${total}`
       )
     ]);
     setDialogOpen(false);
@@ -244,6 +245,7 @@ export default function ProjectManager() {
             <Table>
               <TableHead>
                 <TableRow>
+                  <TableCell align='center'>Name</TableCell>
                   <TableCell align='center'>Date</TableCell>
                   <TableCell align='center'>Service</TableCell>
                   <TableCell align='center'>Features</TableCell>
@@ -260,6 +262,7 @@ export default function ProjectManager() {
                     <TableCell align='center'>{row.date}</TableCell>
                     <TableCell align='center'>{row.service}</TableCell>
                     <TableCell align='center'>{row.features}</TableCell>
+                    <TableCell align='center'>{row.complexity}</TableCell>
                     <TableCell align='center'>{row.platforms}</TableCell>
                     <TableCell align='center'>{row.users}</TableCell>
                     <TableCell align='center'>{row.total}</TableCell>
@@ -306,7 +309,10 @@ export default function ProjectManager() {
                         aria-label='service'
                         name='service'
                         value={service}
-                        onChange={event => setService(event.target.value)}>
+                        onChange={event => {
+                          setService(event.target.value);
+                          setFeatures([]);
+                        }}>
                         <FormControlLabel
                           classes={{ label: classes.service }}
                           value='Website'
@@ -329,6 +335,7 @@ export default function ProjectManager() {
                     </Grid>
                     <Grid item style={{ marginTop: '5em' }}>
                       <Select
+                        disabled={service === 'Website'}
                         labelId='platforms'
                         style={{ width: '12em' }}
                         id='platforms'
@@ -380,18 +387,21 @@ export default function ProjectManager() {
                           value={complexity}
                           onChange={event => setComplexity(event.target.value)}>
                           <FormControlLabel
+                            disabled={service === 'Website'}
                             classes={{ label: classes.service }}
                             value='Low'
                             label='Low'
                             control={<Radio />}
                           />
                           <FormControlLabel
+                            disabled={service === 'Website'}
                             classes={{ label: classes.service }}
                             value='Medium'
                             label='Medium'
                             control={<Radio />}
                           />
                           <FormControlLabel
+                            disabled={service === 'Website'}
                             classes={{ label: classes.service }}
                             value='High'
                             label='High'
@@ -434,6 +444,7 @@ export default function ProjectManager() {
                           value={users}
                           onChange={event => setUsers(event.target.value)}>
                           <FormControlLabel
+                            disabled={service === 'Website'}
                             classes={{
                               label: classes.service,
                               root: classes.users
@@ -443,6 +454,7 @@ export default function ProjectManager() {
                             control={<Radio />}
                           />
                           <FormControlLabel
+                            disabled={service === 'Website'}
                             classes={{
                               label: classes.service,
                               root: classes.users
@@ -452,6 +464,7 @@ export default function ProjectManager() {
                             control={<Radio />}
                           />
                           <FormControlLabel
+                            disabled={service === 'Website'}
                             classes={{
                               label: classes.service,
                               root: classes.users
@@ -476,6 +489,9 @@ export default function ProjectManager() {
                       }
                       value={features}
                       onChange={event => setFeatures(event.target.value)}>
+                      {service === 'Website'
+                        ? (featureOptions = websiteOptions)
+                        : null}
                       {featureOptions.map(option => (
                         <MenuItem key={option} value={option}>
                           {option}
@@ -504,7 +520,8 @@ export default function ProjectManager() {
                     service === 'Website'
                       ? name.length === 0 ||
                         total.length === 0 ||
-                        features.length === 0
+                        features.length === 0 ||
+                        features.length > 1
                       : name.length === 0 ||
                         total.length === 0 ||
                         features.length === 0 ||
