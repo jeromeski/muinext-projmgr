@@ -12,7 +12,9 @@ import {
   TableContainer,
   TableRow,
   TableCell,
-  Paper
+  Paper,
+  Dialog,
+  DialogContent
 } from '@material-ui/core';
 import { makeSyles, useTheme } from '@material-ui/core/styles';
 import { makeStyles } from '@material-ui/styles';
@@ -20,6 +22,11 @@ import theme from '../src/ui/Theme';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import AddIcon from '@material-ui/icons/Add';
 import FilterListIcon from '@material-ui/icons/FilterList';
+import {
+  MuiPickersUtilsProvider,
+  KeyboardDatePicker
+} from '@material-ui/pickers';
+import DateFnsUtils from '@date-io/date-fns';
 
 const useStyles = makeStyles(theme => ({}));
 
@@ -75,113 +82,147 @@ export default function ProjetManager() {
       '$1250'
     )
   ]);
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [name, setName] = useState('');
+  const [date, setDate] = useState(new Date());
 
   return (
-    <Grid container direction='column'>
-      <Grid item style={{ marginTop: '2em', marginLeft: '5em' }}>
-        <Typography variant='h1'>Projects</Typography>
-      </Grid>
-
-      <Grid item>
-        <TextField
-          placeholder='Search project details ro create a new entry'
-          style={{ width: '35em', marginLeft: '5em' }}
-          InputProps={{
-            endAdornment: (
-              <InputAdornment position='end'>
-                <AddIcon color='primary' style={{ fontSize: 30 }} />
-              </InputAdornment>
-            )
-          }}
-        />
-      </Grid>
-      <Grid item style={{ marginLeft: '5em', marginTop: '2em' }}>
-        <FormGroup row>
-          <FormControlLabel
-            style={{ marginRight: '5em' }}
-            control={
-              <Switch
-                checked={websiteChecked}
-                color='primary'
-                onChange={() => setWebsiteChecked(!websiteChecked)}
-              />
-            }
-            label='Websites'
-            labelPlacement='start'
-          />
-          <FormControlLabel
-            style={{ marginRight: '5em' }}
-            control={
-              <Switch
-                checked={iOSChecked}
-                color='primary'
-                onChange={() => setiOSChecked(!iOSChecked)}
-              />
-            }
-            label='iOS Apps'
-            labelPlacement='start'
-          />
-          <FormControlLabel
-            style={{ marginRight: '5em' }}
-            control={
-              <Switch
-                checked={androidChecked}
-                color='primary'
-                onChange={() => setAndroidChecked(!androidChecked)}
-              />
-            }
-            label='Android'
-            labelPlacement='start'
-          />
-          <FormControlLabel
-            style={{ marginRight: '5em' }}
-            control={
-              <Switch
-                checked={softwareChecked}
-                color='primary'
-                onChange={() => setSoftwareChecked(!softwareChecked)}
-              />
-            }
-            label='Software'
-            labelPlacement='start'
-          />
-        </FormGroup>
-      </Grid>
-      <Grid item container justify='flex-end'>
-        <Grid item style={{ marginRight: 75 }}>
-          <FilterListIcon color='secondary' style={{ fontSize: 50 }} />
+    <MuiPickersUtilsProvider utils={DateFnsUtils}>
+      <Grid container direction='column'>
+        <Grid item style={{ marginTop: '2em', marginLeft: '5em' }}>
+          <Typography variant='h1'>Projects</Typography>
         </Grid>
-      </Grid>
-      <Grid item style={{ marginTop: '5em' }}>
-        <TableContainer component={Paper} elevation={0}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell align='center'>Date</TableCell>
-                <TableCell align='center'>Service</TableCell>
-                <TableCell align='center'>Features</TableCell>
-                <TableCell align='center'>Complexity</TableCell>
-                <TableCell align='center'>Platforms</TableCell>
-                <TableCell align='center'>Users</TableCell>
-                <TableCell align='center'>Total</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {rows.map((row, index) => (
-                <TableRow key={index}>
-                  <TableCell align='center'>{row.name}</TableCell>
-                  <TableCell align='center'>{row.date}</TableCell>
-                  <TableCell align='center'>{row.service}</TableCell>
-                  <TableCell align='center'>{row.features}</TableCell>
-                  <TableCell align='center'>{row.platforms}</TableCell>
-                  <TableCell align='center'>{row.users}</TableCell>
-                  <TableCell align='center'>{row.total}</TableCell>
+
+        <Grid item>
+          <TextField
+            placeholder='Search project details ro create a new entry'
+            style={{ width: '35em', marginLeft: '5em' }}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment
+                  position='end'
+                  onClick={() => setDialogOpen(true)}
+                  style={{ cursor: 'pointer' }}>
+                  <AddIcon color='primary' style={{ fontSize: 30 }} />
+                </InputAdornment>
+              )
+            }}
+          />
+        </Grid>
+        <Grid item style={{ marginLeft: '5em', marginTop: '2em' }}>
+          <FormGroup row>
+            <FormControlLabel
+              style={{ marginRight: '5em' }}
+              control={
+                <Switch
+                  checked={websiteChecked}
+                  color='primary'
+                  onChange={() => setWebsiteChecked(!websiteChecked)}
+                />
+              }
+              label='Websites'
+              labelPlacement='start'
+            />
+            <FormControlLabel
+              style={{ marginRight: '5em' }}
+              control={
+                <Switch
+                  checked={iOSChecked}
+                  color='primary'
+                  onChange={() => setiOSChecked(!iOSChecked)}
+                />
+              }
+              label='iOS Apps'
+              labelPlacement='start'
+            />
+            <FormControlLabel
+              style={{ marginRight: '5em' }}
+              control={
+                <Switch
+                  checked={androidChecked}
+                  color='primary'
+                  onChange={() => setAndroidChecked(!androidChecked)}
+                />
+              }
+              label='Android'
+              labelPlacement='start'
+            />
+            <FormControlLabel
+              style={{ marginRight: '5em' }}
+              control={
+                <Switch
+                  checked={softwareChecked}
+                  color='primary'
+                  onChange={() => setSoftwareChecked(!softwareChecked)}
+                />
+              }
+              label='Software'
+              labelPlacement='start'
+            />
+          </FormGroup>
+        </Grid>
+        <Grid item container justify='flex-end'>
+          <Grid item style={{ marginRight: 75 }}>
+            <FilterListIcon color='secondary' style={{ fontSize: 50 }} />
+          </Grid>
+        </Grid>
+        <Grid item style={{ marginTop: '5em' }}>
+          <TableContainer component={Paper} elevation={0}>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell align='center'>Date</TableCell>
+                  <TableCell align='center'>Service</TableCell>
+                  <TableCell align='center'>Features</TableCell>
+                  <TableCell align='center'>Complexity</TableCell>
+                  <TableCell align='center'>Platforms</TableCell>
+                  <TableCell align='center'>Users</TableCell>
+                  <TableCell align='center'>Total</TableCell>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+              </TableHead>
+              <TableBody>
+                {rows.map((row, index) => (
+                  <TableRow key={index}>
+                    <TableCell align='center'>{row.name}</TableCell>
+                    <TableCell align='center'>{row.date}</TableCell>
+                    <TableCell align='center'>{row.service}</TableCell>
+                    <TableCell align='center'>{row.features}</TableCell>
+                    <TableCell align='center'>{row.platforms}</TableCell>
+                    <TableCell align='center'>{row.users}</TableCell>
+                    <TableCell align='center'>{row.total}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </Grid>
+        <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)}>
+          <Grid item>
+            <Typography variant='h1' gutterBottom>
+              Add a new project
+            </Typography>
+          </Grid>
+          <DialogContent>
+            <Grid item container direction='column'>
+              <Grid item>
+                <TextField
+                  label='Name'
+                  id='name'
+                  value={name}
+                  onChange={event => setName(event.target.value)}
+                />
+              </Grid>
+            </Grid>
+            <Grid item container direction='column'>
+              <KeyboardDatePicker
+                format='MM/dd/yyyy'
+                value={date}
+                onChange={newDate => setDate(newDate)}
+              />
+            </Grid>
+          </DialogContent>
+        </Dialog>
       </Grid>
-    </Grid>
+    </MuiPickersUtilsProvider>
   );
 }
