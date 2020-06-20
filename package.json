@@ -9,7 +9,7 @@
     "@material-ui/pickers": "^3.2.10",
     "@material-ui/styles": "^4.10.0",
     "clsx": "latest",
-    "date-fns": "^2.11.1",
+    "date-fns": "^2.14.0",
     "next": "latest",
     "prop-types": "latest",
     "react": "latest",

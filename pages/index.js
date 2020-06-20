@@ -16,7 +16,8 @@ import {
   Dialog,
   DialogContent,
   Radio,
-  RadioGroup
+  RadioGroup,
+  Button
 } from '@material-ui/core';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -29,6 +30,7 @@ import {
   KeyboardDatePicker
 } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
+import { format } from 'date-fns';
 
 const useStyles = makeStyles(theme => ({
   service: {
@@ -56,12 +58,23 @@ function createData(
   complexity,
   platforms,
   users,
-  total
+  total,
+  search
 ) {
-  return { name, date, service, features, complexity, platforms, users, total };
+  return {
+    name,
+    date,
+    service,
+    features,
+    complexity,
+    platforms,
+    users,
+    total,
+    search
+  };
 }
 
-export default function ProjetManager() {
+export default function ProjectManager() {
   const classes = useStyles();
   const theme = useTheme();
   const [websiteChecked, setWebsiteChecked] = useState(false);
@@ -120,6 +133,31 @@ export default function ProjetManager() {
   const [users, setUsers] = useState('');
   const [platforms, setPlatforms] = useState([]);
   const [features, setFeatures] = useState([]);
+
+  const addProject = () => {
+    setRows([
+      ...rows,
+      createData(
+        name,
+        format(date, 'MM/dd/yy'),
+        service,
+        features.join(', '),
+        complexity,
+        platforms.join(', '),
+        users,
+        total
+      )
+    ]);
+    setDialogOpen(false);
+    setName('');
+    setDate(new Date());
+    setTotal('');
+    setService('');
+    setComplexity('');
+    setUsers('');
+    setPlatforms([]);
+    setFeatures([]);
+  };
 
   return (
     <MuiPickersUtilsProvider utils={DateFnsUtils}>
@@ -292,7 +330,7 @@ export default function ProjetManager() {
                     <Grid item style={{ marginTop: '5em' }}>
                       <Select
                         labelId='platforms'
-                        style={{width: '12em'}}
+                        style={{ width: '12em' }}
                         id='platforms'
                         multiple
                         displayEmpty
@@ -366,12 +404,7 @@ export default function ProjetManager() {
                 </Grid>
               </Grid>
               <Grid item>
-                <Grid
-                  item
-                  container
-                  direction='column'
-                  sm
-                  >
+                <Grid item container direction='column' sm>
                   <Grid item>
                     <TextField
                       InputProps={{
@@ -385,12 +418,11 @@ export default function ProjetManager() {
                       onChange={event => setTotal(event.target.value)}
                     />
                   </Grid>
-                  <Grid item >
+                  <Grid item style={{ alignSelf: 'flex-end' }}>
                     <Grid
                       item
                       container
                       direction='column'
-                      alignItems='flex-end'
                       style={{ marginTop: '5em' }}>
                       <Grid item>
                         <Typography variant='h4'>Users</Typography>
@@ -430,28 +462,59 @@ export default function ProjetManager() {
                           />
                         </RadioGroup>
                       </Grid>
-                      <Grid item style={{ marginTop: '5em' }}>
-                        <Select
-                          labelId='features'
-                          style={{width: '12em'}}
-                          id='features'
-                          multiple
-                          displayEmpty
-                          renderValue={
-                            features.length > 0 ? undefined : () => 'Features'
-                          }
-                          value={features}
-                          onChange={event => setFeatures(event.target.value)}>
-                          {featureOptions.map(option => (
-                            <MenuItem key={option} value={option}>
-                              {option}
-                            </MenuItem>
-                          ))}
-                        </Select>
-                      </Grid>
                     </Grid>
                   </Grid>
+                  <Grid item style={{ marginTop: '5em' }}>
+                    <Select
+                      labelId='features'
+                      style={{ width: '12em' }}
+                      id='features'
+                      multiple
+                      displayEmpty
+                      renderValue={
+                        features.length > 0 ? undefined : () => 'Features'
+                      }
+                      value={features}
+                      onChange={event => setFeatures(event.target.value)}>
+                      {featureOptions.map(option => (
+                        <MenuItem key={option} value={option}>
+                          {option}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </Grid>
                 </Grid>
+              </Grid>
+            </Grid>
+            <Grid container justify='center' style={{ marginTop: '3em' }}>
+              <Grid item>
+                <Button
+                  onClick={() => setDialogOpen(false)}
+                  color='primary'
+                  style={{ fontWeight: 300 }}>
+                  Cancel
+                </Button>
+              </Grid>
+              <Grid item>
+                <Button
+                  onClick={addProject}
+                  variant='contained'
+                  className={classes.button}
+                  disabled={
+                    service === 'Website'
+                      ? name.length === 0 ||
+                        total.length === 0 ||
+                        features.length === 0
+                      : name.length === 0 ||
+                        total.length === 0 ||
+                        features.length === 0 ||
+                        users.length === 0 ||
+                        complexity.length === 0 ||
+                        platforms.length === 0 ||
+                        service.length === 0
+                  }>
+                  Add Project
+                </Button>
               </Grid>
             </Grid>
           </DialogContent>
