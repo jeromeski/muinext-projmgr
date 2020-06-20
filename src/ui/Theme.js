@@ -105,6 +105,13 @@ export default createMuiTheme({
         }
       }
     },
+    MuiSvgIcon: {
+      root: {
+        '&.MuiSelect-icon': {
+          fill: arcOrange
+        }
+      }
+    },
     MuiFormControlLabel: {
       label: {
         color: arcBlue,

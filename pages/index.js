@@ -18,6 +18,8 @@ import {
   Radio,
   RadioGroup
 } from '@material-ui/core';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import AddIcon from '@material-ui/icons/Add';
@@ -98,6 +100,17 @@ export default function ProjetManager() {
       '$1250'
     )
   ]);
+
+  const platformOptions = ['Web', 'iOS', 'Android'];
+  const featureOptions = [
+    'Photo/Video',
+    'GPS',
+    'File Transfer',
+    'Users/Authentication',
+    'Biometrics',
+    'Push Notifications'
+  ];
+
   const [dialogOpen, setDialogOpen] = useState(false);
   const [name, setName] = useState('');
   const [date, setDate] = useState(new Date());
@@ -105,6 +118,8 @@ export default function ProjetManager() {
   const [service, setService] = useState('');
   const [complexity, setComplexity] = useState('');
   const [users, setUsers] = useState('');
+  const [platforms, setPlatforms] = useState([]);
+  const [features, setFeatures] = useState([]);
 
   return (
     <MuiPickersUtilsProvider utils={DateFnsUtils}>
@@ -220,7 +235,7 @@ export default function ProjetManager() {
           fullWidth
           maxWidth='md'
           open={dialogOpen}
-          style={{ zIndex: 1302 }}
+          // style={{ zIndex: 1302 }}
           onClose={() => setDialogOpen(false)}>
           <Grid item align='center'>
             <Typography variant='h1' gutterBottom>
@@ -273,6 +288,25 @@ export default function ProjetManager() {
                           control={<Radio />}
                         />
                       </RadioGroup>
+                    </Grid>
+                    <Grid item style={{ marginTop: '5em' }}>
+                      <Select
+                        labelId='platforms'
+                        style={{width: '12em'}}
+                        id='platforms'
+                        multiple
+                        displayEmpty
+                        renderValue={
+                          platforms.length > 0 ? undefined : () => 'Platform'
+                        }
+                        value={platforms}
+                        onChange={event => setPlatforms(event.target.value)}>
+                        {platformOptions.map(option => (
+                          <MenuItem key={option} value={option}>
+                            {option}
+                          </MenuItem>
+                        ))}
+                      </Select>
                     </Grid>
                   </Grid>
                 </Grid>
@@ -337,7 +371,7 @@ export default function ProjetManager() {
                   container
                   direction='column'
                   sm
-                  alignItems='flex-end'>
+                  >
                   <Grid item>
                     <TextField
                       InputProps={{
@@ -351,11 +385,12 @@ export default function ProjetManager() {
                       onChange={event => setTotal(event.target.value)}
                     />
                   </Grid>
-                  <Grid item>
+                  <Grid item >
                     <Grid
                       item
                       container
                       direction='column'
+                      alignItems='flex-end'
                       style={{ marginTop: '5em' }}>
                       <Grid item>
                         <Typography variant='h4'>Users</Typography>
@@ -367,27 +402,52 @@ export default function ProjetManager() {
                           value={users}
                           onChange={event => setUsers(event.target.value)}>
                           <FormControlLabel
-                            classes={{ label: classes.service,
-                            root: classes.users }}
+                            classes={{
+                              label: classes.service,
+                              root: classes.users
+                            }}
                             value='0-10'
                             label='0-10'
                             control={<Radio />}
                           />
                           <FormControlLabel
-                            classes={{ label: classes.service,
-                              root: classes.users }}
+                            classes={{
+                              label: classes.service,
+                              root: classes.users
+                            }}
                             value='11-100'
                             label='11-100'
                             control={<Radio />}
                           />
                           <FormControlLabel
-                            classes={{ label: classes.service,
-                              root: classes.users }}
+                            classes={{
+                              label: classes.service,
+                              root: classes.users
+                            }}
                             value='100+'
                             label='100+'
                             control={<Radio />}
                           />
                         </RadioGroup>
+                      </Grid>
+                      <Grid item style={{ marginTop: '5em' }}>
+                        <Select
+                          labelId='features'
+                          style={{width: '12em'}}
+                          id='features'
+                          multiple
+                          displayEmpty
+                          renderValue={
+                            features.length > 0 ? undefined : () => 'Features'
+                          }
+                          value={features}
+                          onChange={event => setFeatures(event.target.value)}>
+                          {featureOptions.map(option => (
+                            <MenuItem key={option} value={option}>
+                              {option}
+                            </MenuItem>
+                          ))}
+                        </Select>
                       </Grid>
                     </Grid>
                   </Grid>
