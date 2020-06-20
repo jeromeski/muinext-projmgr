@@ -17,9 +17,6 @@ const useStyles = makeStyles(theme => ({
     [theme.breakpoints.down('xs')]: {
       width: '15em'
     }
-  },
-  mainContainer: {
-    position: 'absolute'
   }
 }));
 
@@ -29,7 +26,7 @@ export default function Footer(props) {
   return (
     <footer className={classes.footer}>
       <img
-        alt='logo'
+        alt='black decorative slash'
         src='/assets/footerAdornment.svg'
         className={classes.adornment}
       />
