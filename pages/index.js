@@ -268,7 +268,7 @@ export default function ProjectManager() {
           </FormGroup>
         </Grid>
         <Grid item style={{ marginTop: '5em', marginBottom: '35em' }}>
-          <EnhancedTable rows={rows} page={page} setPage={setPage} />
+          <EnhancedTable rows={rows} setRows={setRows} page={page} setPage={setPage} />
         </Grid>
         <Dialog
           fullWidth
