@@ -138,7 +138,7 @@ export default function ProjectManager() {
   const [users, setUsers] = useState('');
   const [platforms, setPlatforms] = useState([]);
   const [features, setFeatures] = useState([]);
-  const [search, setSearch] = useState('')
+  const [search, setSearch] = useState('');
 
   const addProject = () => {
     setRows([
@@ -166,18 +166,27 @@ export default function ProjectManager() {
     setFeatures([]);
   };
 
-  const handleSearch = (event) => {
+  const handleSearch = event => {
     setSearch(event.target.value);
-    const rowData = rows.map(row => Object.values(row).filter(option => option !== true && option !== false))
+    const rowData = rows.map(row =>
+      Object.values(row).filter(option => option !== true && option !== false)
+    );
 
-    const matches = rowData.map(row => row.map(option => option.toLowerCase().includes(event.target.value.toLowerCase())))
-    
-    
-    const newRows = [...rows]
-    matches.map((row, index) => row.includes(true) ? newRows[index].search = true : newRows[index].search = false)
+    const matches = rowData.map(row =>
+      row.map(option =>
+        option.toLowerCase().includes(event.target.value.toLowerCase())
+      )
+    );
 
-    setRows(newRows)
-  }
+    const newRows = [...rows];
+    matches.map((row, index) =>
+      row.includes(true)
+        ? (newRows[index].search = true)
+        : (newRows[index].search = false)
+    );
+
+    setRows(newRows);
+  };
 
   return (
     <MuiPickersUtilsProvider utils={DateFnsUtils}>
@@ -256,14 +265,9 @@ export default function ProjectManager() {
             />
           </FormGroup>
         </Grid>
-        <Grid item container justify='flex-end'>
-          <Grid item style={{ marginRight: 75 }}>
-            <FilterListIcon color='secondary' style={{ fontSize: 50 }} />
-          </Grid>
+        <Grid item style={{ marginTop: '5em', marginBottom: '15em' }}>
+          <EnhancedTable rows={rows} />
         </Grid>
-        <Grid item style={{ marginTop: '5em' }}>
-        <EnhancedTable rows={rows} />
-                  </Grid>
         <Dialog
           fullWidth
           maxWidth='md'
