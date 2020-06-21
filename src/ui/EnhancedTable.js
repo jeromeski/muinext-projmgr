@@ -161,6 +161,7 @@ const EnhancedTableToolbar = props => {
     selectedRows.map(row => (row.search = false));
     props.setRows(newRows);
     setUndo(selectedRows);
+    props.setSelected([]);
     setAlert({ ...alert, open: true });
   };
 
@@ -170,6 +171,7 @@ const EnhancedTableToolbar = props => {
     const redo = [...undo];
     redo.map(row => (row.search = true));
     Array.prototype.push.apply(newRows, ...redo);
+    props.setRows(newRows);
   };
 
   return (
@@ -213,10 +215,12 @@ const EnhancedTableToolbar = props => {
         message={alert.message}
         ContentProps={{ style: { backgroundColor: alert.color } }}
         anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-        onClose={() => {
-          setAlert({ ...alert, open: false });
+        onClose={({ event, reason }) => {
+          if (reason === 'clickaway') setAlert({ ...alert, open: false });
+          const newRows = [...props.rows];
+          const names = [...undo.map(row => row.name)];
+          props.setRows(newRows.filter(row => !names.includes(row.name)));
         }}
-        autoHideDuration={4000}
         action={
           <Button onClick={onUndo} style={{ color: '#fff' }}>
             Undo
