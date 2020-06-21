@@ -90,7 +90,8 @@ export default function ProjectManager() {
       'N/A',
       'N/A',
       'N/A',
-      '$1500'
+      '$1500',
+      true
     ),
     createData(
       'Bill Gates',
@@ -100,7 +101,8 @@ export default function ProjectManager() {
       'Medium',
       'Web Application',
       '0-10',
-      '$1600'
+      '$1600',
+      true
     ),
     createData(
       'Steve Jobs',
@@ -110,7 +112,8 @@ export default function ProjectManager() {
       'Low',
       'Web Application',
       '10-100',
-      '$1250'
+      '$1250',
+      true
     )
   ]);
 
@@ -134,6 +137,7 @@ export default function ProjectManager() {
   const [users, setUsers] = useState('');
   const [platforms, setPlatforms] = useState([]);
   const [features, setFeatures] = useState([]);
+  const [search, setSearch] = useState('')
 
   const addProject = () => {
     setRows([
@@ -146,7 +150,8 @@ export default function ProjectManager() {
         service === 'Website' ? 'N/A' : complexity,
         service === 'Website' ? 'N/A' : platforms.join(', '),
         service === 'Website' ? 'N/A' : users,
-        `$${total}`
+        `$${total}`,
+        true
       )
     ]);
     setDialogOpen(false);
@@ -160,6 +165,19 @@ export default function ProjectManager() {
     setFeatures([]);
   };
 
+  const handleSearch = (event) => {
+    setSearch(event.target.value);
+    const rowData = rows.map(row => Object.values(row).filter(option => option !== true && option !== false))
+
+    const matches = rowData.map(row => row.map(option => option.toLowerCase().includes(event.target.value.toLowerCase())))
+    
+    
+    const newRows = [...rows]
+    matches.map((row, index) => row.includes(true) ? newRows[index].search = true : newRows[index].search = false)
+
+    setRows(newRows)
+  }
+
   return (
     <MuiPickersUtilsProvider utils={DateFnsUtils}>
       <Grid container direction='column'>
@@ -171,6 +189,8 @@ export default function ProjectManager() {
           <TextField
             placeholder='Search project details ro create a new entry'
             style={{ width: '35em', marginLeft: '5em' }}
+            value={search}
+            onChange={handleSearch}
             InputProps={{
               endAdornment: (
                 <InputAdornment
@@ -256,7 +276,7 @@ export default function ProjectManager() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {rows.map((row, index) => (
+                {rows.filter(row => row.search).map((row, index) => (
                   <TableRow key={index}>
                     <TableCell align='center'>{row.name}</TableCell>
                     <TableCell align='center'>{row.date}</TableCell>
