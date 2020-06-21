@@ -20,6 +20,8 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
 import DeleteIcon from '@material-ui/icons/Delete';
 import FilterListIcon from '@material-ui/icons/FilterList';
+import Snackbar from '@material-ui/core/Snackbar';
+import Button from '@material-ui/core/Button';
 
 function createData(name, calories, fat, carbs, protein) {
   return { name, calories, fat, carbs, protein };
@@ -144,14 +146,30 @@ const useToolbarStyles = makeStyles(theme => ({
 const EnhancedTableToolbar = props => {
   const classes = useToolbarStyles();
   const { numSelected } = props;
+  const [undo, setUndo] = React.useState([]);
+  const [alert, setAlert] = React.useState({
+    open: false,
+    color: '#FF3232',
+    message: 'Row deleted!'
+  });
 
   const onDelete = () => {
     const newRows = [...props.rows];
     const selectedRows = newRows.filter(row =>
       props.selected.includes(row.name)
     );
-    selectedRows.map(row => row.search = false);
-    props.setRows(newRows)
+    selectedRows.map(row => (row.search = false));
+    props.setRows(newRows);
+    setUndo(selectedRows);
+    setAlert({ ...alert, open: true });
+  };
+
+  const onUndo = () => {
+    setAlert({ ...alert, open: false });
+    const newRows = [...props.rows];
+    const redo = [...undo];
+    redo.map(row => (row.search = true));
+    Array.prototype.push.apply(newRows, ...redo);
   };
 
   return (
@@ -190,6 +208,21 @@ const EnhancedTableToolbar = props => {
           </IconButton>
         </Tooltip>
       )}
+      <Snackbar
+        open={alert.open}
+        message={alert.message}
+        ContentProps={{ style: { backgroundColor: alert.color } }}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        onClose={() => {
+          setAlert({ ...alert, open: false });
+        }}
+        autoHideDuration={4000}
+        action={
+          <Button onClick={onUndo} style={{ color: '#fff' }}>
+            Undo
+          </Button>
+        }
+      />
     </Toolbar>
   );
 };
