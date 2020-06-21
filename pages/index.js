@@ -139,6 +139,7 @@ export default function ProjectManager() {
   const [platforms, setPlatforms] = useState([]);
   const [features, setFeatures] = useState([]);
   const [search, setSearch] = useState('');
+  const [page, setPage] = React.useState(0);
 
   const addProject = () => {
     setRows([
@@ -186,6 +187,7 @@ export default function ProjectManager() {
     );
 
     setRows(newRows);
+    setPage(0)
   };
 
   return (
@@ -265,8 +267,8 @@ export default function ProjectManager() {
             />
           </FormGroup>
         </Grid>
-        <Grid item style={{ marginTop: '5em', marginBottom: '15em' }}>
-          <EnhancedTable rows={rows} />
+        <Grid item style={{ marginTop: '5em', marginBottom: '35em' }}>
+          <EnhancedTable rows={rows} page={page} setPage={setPage} />
         </Grid>
         <Dialog
           fullWidth
