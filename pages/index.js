@@ -6,13 +6,6 @@ import {
   Switch,
   FormGroup,
   FormControlLabel,
-  Table,
-  TableBody,
-  TableHead,
-  TableContainer,
-  TableRow,
-  TableCell,
-  Paper,
   Dialog,
   DialogContent,
   Radio,
@@ -24,7 +17,6 @@ import MenuItem from '@material-ui/core/MenuItem';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import AddIcon from '@material-ui/icons/Add';
-import FilterListIcon from '@material-ui/icons/FilterList';
 import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker
@@ -115,6 +107,28 @@ export default function ProjectManager() {
       '10-100',
       '$1250',
       true
+    ),
+    createData(
+      'Stan Smith',
+      '4/14/20',
+      'Mobile App',
+      'Photo/Video, File Transfer, Users/Authentication',
+      'Low',
+      'iOS, Android',
+      '10-100',
+      '$1250',
+      true
+    ),
+    createData(
+      'Albert Einstein',
+      '5/20/19',
+      'Custom Software',
+      'Photo/Video, File Transfer, Users/Authentication',
+      'Low',
+      'Android',
+      '10-100',
+      '$1250',
+      true
     )
   ]);
 
@@ -187,7 +201,7 @@ export default function ProjectManager() {
     );
 
     setRows(newRows);
-    setPage(0)
+    setPage(0);
   };
 
   return (
@@ -268,7 +282,16 @@ export default function ProjectManager() {
           </FormGroup>
         </Grid>
         <Grid item style={{ marginTop: '5em', marginBottom: '35em' }}>
-          <EnhancedTable rows={rows} setRows={setRows} page={page} setPage={setPage} />
+          <EnhancedTable
+            rows={rows}
+            setRows={setRows}
+            page={page}
+            setPage={setPage}
+            websiteChecked={websiteChecked}
+            iOSChecked={iOSChecked}
+            androidChecked={androidChecked}
+            softwareChecked={softwareChecked}
+          />
         </Grid>
         <Dialog
           fullWidth
