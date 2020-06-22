@@ -22,6 +22,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import FilterListIcon from '@material-ui/icons/FilterList';
 import Snackbar from '@material-ui/core/Snackbar';
 import Button from '@material-ui/core/Button';
+import { MenuItem, TextField, Menu, InputAdornment } from '@material-ui/core';
 
 function createData(name, calories, fat, carbs, protein) {
   return { name, calories, fat, carbs, protein };
@@ -140,6 +141,14 @@ const useToolbarStyles = makeStyles(theme => ({
         },
   title: {
     flex: '1 1 100%'
+  },
+  menu: {
+    '&:hover': {
+      backgroundColor: '#fff'
+    },
+    '&.Mui-focusVisible': {
+      backgroundColor: '#fff'
+    }
   }
 }));
 
@@ -147,11 +156,24 @@ const EnhancedTableToolbar = props => {
   const classes = useToolbarStyles();
   const { numSelected } = props;
   const [undo, setUndo] = React.useState([]);
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [openMenu, setOpenMenu] = React.useState(false);
+  const [totalFilter, setTotalFilter] = React.useState('>');
   const [alert, setAlert] = React.useState({
     open: false,
     color: '#FF3232',
     message: 'Row deleted!'
   });
+
+  const handleClick = e => {
+    setAnchorEl(e.currentTarget);
+    setOpenMenu(true);
+  };
+
+  const handleClose = e => {
+    setAnchorEl(null);
+    setOpenMenu(false);
+  };
 
   const onDelete = () => {
     const newRows = [...props.rows];
@@ -205,7 +227,7 @@ const EnhancedTableToolbar = props => {
         </Tooltip>
       ) : (
         <Tooltip title='Filter list'>
-          <IconButton aria-label='filter list'>
+          <IconButton aria-label='filter list' onClick={handleClick}>
             <FilterListIcon style={{ fontSize: 50 }} color='secondary' />
           </IconButton>
         </Tooltip>
@@ -227,6 +249,38 @@ const EnhancedTableToolbar = props => {
           </Button>
         }
       />
+      <Menu
+        id='simple-menu'
+        anchorEl={anchorEl}
+        open={openMenu}
+        onClose={handleClose}
+        elevation={0}
+        style={{ zIndex: 1302 }}
+        keepMounted>
+        <MenuItem className={classes.menu}>
+          <TextField
+            InputProps={{
+              type: 'number',
+              endAdornment: (
+                <InputAdornment
+                  onClick={() =>
+                    setTotalFilter(
+                      totalFilter === '>'
+                        ? '<'
+                        : totalFilter === '<'
+                        ? '='
+                        : '>'
+                    )
+                  }
+                  position='end'
+                  style={{ pointer: 'click' }}>
+                  <span className={classes.totalFilter}>{totalFilter}</span>
+                </InputAdornment>
+              )
+            }}
+          />
+        </MenuItem>
+      </Menu>
     </Toolbar>
   );
 };
