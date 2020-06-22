@@ -10,7 +10,8 @@ import {
   DialogContent,
   Radio,
   RadioGroup,
-  Button
+  Button,
+  useMediaQuery
 } from '@material-ui/core';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -154,6 +155,8 @@ export default function ProjectManager() {
   const [features, setFeatures] = useState([]);
   const [search, setSearch] = useState('');
   const [page, setPage] = React.useState(0);
+  const matchesMD = useMediaQuery(theme.breakpoints.down('md'));
+  const matchesSM = useMediaQuery(theme.breakpoints.down('sm'));
 
   const addProject = () => {
     setRows([
@@ -206,15 +209,15 @@ export default function ProjectManager() {
 
   return (
     <MuiPickersUtilsProvider utils={DateFnsUtils}>
-      <Grid container direction='column'>
-        <Grid item style={{ marginTop: '2em', marginLeft: '5em' }}>
+      <Grid container direction='column' alignItems={matchesSM ? 'center' : undefined}>
+        <Grid item style={{ marginTop: '2em', marginLeft: matchesSM ? 0 : '5em' }}>
           <Typography variant='h1'>Projects</Typography>
         </Grid>
 
         <Grid item>
           <TextField
             placeholder='Search project details ro create a new entry'
-            style={{ width: '35em', marginLeft: '5em' }}
+            style={{ width: matchesSM ? '25em': '35em', marginLeft: matchesSM ? 0 :'5em' }}
             value={search}
             onChange={handleSearch}
             InputProps={{
@@ -229,59 +232,78 @@ export default function ProjectManager() {
             }}
           />
         </Grid>
-        <Grid item style={{ marginLeft: '5em', marginTop: '2em' }}>
+        <Grid item style={{ marginLeft: matchesSM ? 0 : '5em', marginTop: '2em' }}>
           <FormGroup row>
-            <FormControlLabel
-              style={{ marginRight: '5em' }}
-              control={
-                <Switch
-                  checked={websiteChecked}
-                  color='primary'
-                  onChange={() => setWebsiteChecked(!websiteChecked)}
+            <Grid
+              container
+              direction={matchesSM ? 'column' : 'row'}
+              justify={matchesSM ? 'center' : undefined}>
+              <Grid item>
+                <FormControlLabel
+                  style={{ marginRight: matchesSM ? 0 : '5em' }}
+                  control={
+                    <Switch
+                      checked={websiteChecked}
+                      color='primary'
+                      onChange={() => setWebsiteChecked(!websiteChecked)}
+                    />
+                  }
+                  label='Websites'
+                  labelPlacement='start'
                 />
-              }
-              label='Websites'
-              labelPlacement='start'
-            />
-            <FormControlLabel
-              style={{ marginRight: '5em' }}
-              control={
-                <Switch
-                  checked={iOSChecked}
-                  color='primary'
-                  onChange={() => setiOSChecked(!iOSChecked)}
+              </Grid>
+              <Grid item>
+                <FormControlLabel
+                  style={{ marginRight: matchesSM ? 0 : '5em'  }}
+                  control={
+                    <Switch
+                      checked={iOSChecked}
+                      color='primary'
+                      onChange={() => setiOSChecked(!iOSChecked)}
+                    />
+                  }
+                  label='iOS Apps'
+                  labelPlacement='start'
                 />
-              }
-              label='iOS Apps'
-              labelPlacement='start'
-            />
-            <FormControlLabel
-              style={{ marginRight: '5em' }}
-              control={
-                <Switch
-                  checked={androidChecked}
-                  color='primary'
-                  onChange={() => setAndroidChecked(!androidChecked)}
+              </Grid>
+              <Grid item>
+                <FormControlLabel
+                  style={{ marginRight: matchesSM ? 0 : '5em'  }}
+                  control={
+                    <Switch
+                      checked={androidChecked}
+                      color='primary'
+                      onChange={() => setAndroidChecked(!androidChecked)}
+                    />
+                  }
+                  label='Android'
+                  labelPlacement='start'
                 />
-              }
-              label='Android'
-              labelPlacement='start'
-            />
-            <FormControlLabel
-              style={{ marginRight: '5em' }}
-              control={
-                <Switch
-                  checked={softwareChecked}
-                  color='primary'
-                  onChange={() => setSoftwareChecked(!softwareChecked)}
+              </Grid>
+              <Grid item>
+                <FormControlLabel
+                  style={{ marginRight: matchesSM ? 0 : '5em' }}
+                  control={
+                    <Switch
+                      checked={softwareChecked}
+                      color='primary'
+                      onChange={() => setSoftwareChecked(!softwareChecked)}
+                    />
+                  }
+                  label='Software'
+                  labelPlacement='start'
                 />
-              }
-              label='Software'
-              labelPlacement='start'
-            />
+              </Grid>
+            </Grid>
           </FormGroup>
         </Grid>
-        <Grid item style={{ marginTop: '5em', marginBottom: '35em' }}>
+        <Grid
+          item
+          style={{
+            marginTop: '5em',
+            marginBottom: matchesMD ? '40em' : '35em',
+            maxWidth: '100%'
+          }}>
           <EnhancedTable
             rows={rows}
             setRows={setRows}
