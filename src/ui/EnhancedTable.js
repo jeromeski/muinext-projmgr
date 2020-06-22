@@ -16,13 +16,18 @@ import Paper from '@material-ui/core/Paper';
 import Checkbox from '@material-ui/core/Checkbox';
 import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Switch from '@material-ui/core/Switch';
 import DeleteIcon from '@material-ui/icons/Delete';
 import FilterListIcon from '@material-ui/icons/FilterList';
 import Snackbar from '@material-ui/core/Snackbar';
 import Button from '@material-ui/core/Button';
-import { MenuItem, TextField, Menu, InputAdornment, Grid, Chip } from '@material-ui/core';
+import {
+  MenuItem,
+  TextField,
+  Menu,
+  InputAdornment,
+  Grid,
+  Chip
+} from '@material-ui/core';
 
 function createData(name, calories, fat, carbs, protein) {
   return { name, calories, fat, carbs, protein };
@@ -166,8 +171,7 @@ const EnhancedTableToolbar = props => {
   const [undo, setUndo] = React.useState([]);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [openMenu, setOpenMenu] = React.useState(false);
-  
-  
+
   const [alert, setAlert] = React.useState({
     open: false,
     color: '#FF3232',
@@ -238,7 +242,7 @@ const EnhancedTableToolbar = props => {
       props.setRows(newRows);
     } else {
       const newRows = [...props.rows];
-      newRows.map(row => row.search = true);
+      newRows.map(row => (row.search = true));
       props.setRows(newRows);
     }
   };
@@ -336,7 +340,9 @@ const EnhancedTableToolbar = props => {
                   }}
                   position='end'
                   style={{ cursor: 'pointer' }}>
-                  <span className={classes.totalFilter}>{props.totalFilter}</span>
+                  <span className={classes.totalFilter}>
+                    {props.totalFilter}
+                  </span>
                 </InputAdornment>
               )
             }}
@@ -372,6 +378,11 @@ const useStyles = makeStyles(theme => ({
     position: 'absolute',
     top: 20,
     width: 1
+  },
+  chip: {
+    marginRight: '2em',
+    backgroundColor: theme.palette.common.blue,
+    color: '#fff'
   }
 }));
 
@@ -472,6 +483,24 @@ export default function EnhancedTable(props) {
     }
   };
 
+  const priceFilters = (switchRows) => {
+    if(filterPrice !== '' ) {
+      const newRows = [...switchRows]
+      newRows.map(row =>
+        eval(
+          `${filterPrice} ${
+            totalFilter === '=' ? '===' : totalFilter
+          } ${row.total.slice(1, row.total.length)}`
+        )
+          ? row.search === false ? null : (row.search = true)
+          : (row.search = false)
+      );
+      return newRows
+    }else {
+      return switchRows
+    }
+  }
+
   return (
     <div className={classes.root}>
       <Paper className={classes.paper} elevation={0}>
@@ -503,7 +532,7 @@ export default function EnhancedTable(props) {
             />
             <TableBody>
               {stableSort(
-                switchFilters().filter(row => row.search),
+                priceFilters(switchFilters()).filter(row => row.search),
                 getComparator(order, orderBy)
               )
                 .slice(
@@ -557,16 +586,33 @@ export default function EnhancedTable(props) {
         <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
           component='div'
-          count={props.rows.filter(row => row.search).length}
+          count={priceFilters(switchFilters()).filter(row => row.search).length}
           rowsPerPage={rowsPerPage}
           page={props.page}
           onChangePage={handleChangePage}
           onChangeRowsPerPage={handleChangeRowsPerPage}
         />
         <Grid container justify='flex-end'>
-         <Grid item>
-         {filterPrice !== '' ? <Chip label={totalFilter === '>' ? `Less than $${filterPrice}` : totalFilter === '<' ? `Greater than $${filterPrice}` : `Equal to $${filterPrice}`} /> : null}
-         </Grid>
+          <Grid item>
+            {filterPrice !== '' ? (
+              <Chip
+                onDelete={() => {
+                  setFilterPrice('');
+                  const newRows = [...props.rows];
+                  newRows.map(row => row.search = true);
+                  props.setRows(newRows)
+                }}
+                className={classes.chip}
+                label={
+                  totalFilter === '>'
+                    ? `Less than $${filterPrice}`
+                    : totalFilter === '<'
+                    ? `Greater than $${filterPrice}`
+                    : `Equal to $${filterPrice}`
+                }
+              />
+            ) : null}
+          </Grid>
         </Grid>
       </Paper>
     </div>
